@@ -1,0 +1,12 @@
+C:\Users\Jurgen\source\repos\HybridCryptoApp-Server\HybridCryptoApp-Server.Data\bin\Debug\netcoreapp3.1\HybridCryptoApp-Server.Data.deps.json
+C:\Users\Jurgen\source\repos\HybridCryptoApp-Server\HybridCryptoApp-Server.Data\bin\Debug\netcoreapp3.1\HybridCryptoApp-Server.Data.dll
+C:\Users\Jurgen\source\repos\HybridCryptoApp-Server\HybridCryptoApp-Server.Data\obj\Debug\netcoreapp3.1\HybridCryptoApp-Server.Data.AssemblyInfoInputs.cache
+C:\Users\Jurgen\source\repos\HybridCryptoApp-Server\HybridCryptoApp-Server.Data\obj\Debug\netcoreapp3.1\HybridCryptoApp-Server.Data.AssemblyInfo.cs
+C:\Users\Jurgen\source\repos\HybridCryptoApp-Server\HybridCryptoApp-Server.Data\obj\Debug\netcoreapp3.1\HybridCryptoApp-Server.Data.csprojAssemblyReference.cache
+C:\Users\Jurgen\source\repos\HybridCryptoApp-Server\HybridCryptoApp-Server.Data\bin\Debug\netcoreapp3.1\HybridCryptoApp-Server.Data.runtimeconfig.json
+C:\Users\Jurgen\source\repos\HybridCryptoApp-Server\HybridCryptoApp-Server.Data\bin\Debug\netcoreapp3.1\HybridCryptoApp-Server.Data.runtimeconfig.dev.json
+C:\Users\Jurgen\source\repos\HybridCryptoApp-Server\HybridCryptoApp-Server.Data\obj\Debug\netcoreapp3.1\HybridCryptoApp-Server.Data.genruntimeconfig.cache
+C:\Users\Jurgen\source\repos\HybridCryptoApp-Server\HybridCryptoApp-Server.Data\bin\Debug\netcoreapp3.1\HybridCryptoApp-Server.Data.pdb
+C:\Users\Jurgen\source\repos\HybridCryptoApp-Server\HybridCryptoApp-Server.Data\obj\Debug\netcoreapp3.1\HybridCryptoApp-Server.Data.dll
+C:\Users\Jurgen\source\repos\HybridCryptoApp-Server\HybridCryptoApp-Server.Data\obj\Debug\netcoreapp3.1\HybridCryptoApp-Server.Data.pdb
+C:\Users\Jurgen\source\repos\HybridCryptoApp-Server\HybridCryptoApp-Server.Data\obj\Debug\netcoreapp3.1\HybridCryptoApp-Server.Data.csproj.CoreCompileInputs.cache
