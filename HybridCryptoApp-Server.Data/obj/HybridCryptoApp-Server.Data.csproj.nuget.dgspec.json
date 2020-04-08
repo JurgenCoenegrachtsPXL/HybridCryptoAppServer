@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Jurgen\\source\\repos\\HybridCryptoApp-Server\\HybridCryptoApp-Server.Data\\HybridCryptoApp-Server.Data.csproj": {}
+    "C:\\Users\\11800569\\Documents\\HybridCryptoAppServer\\HybridCryptoApp-Server.Data\\HybridCryptoApp-Server.Data.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Jurgen\\source\\repos\\HybridCryptoApp-Server\\HybridCryptoApp-Server.Data\\HybridCryptoApp-Server.Data.csproj": {
+    "C:\\Users\\11800569\\Documents\\HybridCryptoAppServer\\HybridCryptoApp-Server.Data\\HybridCryptoApp-Server.Data.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Jurgen\\source\\repos\\HybridCryptoApp-Server\\HybridCryptoApp-Server.Data\\HybridCryptoApp-Server.Data.csproj",
+        "projectUniqueName": "C:\\Users\\11800569\\Documents\\HybridCryptoAppServer\\HybridCryptoApp-Server.Data\\HybridCryptoApp-Server.Data.csproj",
         "projectName": "HybridCryptoApp-Server.Data",
-        "projectPath": "C:\\Users\\Jurgen\\source\\repos\\HybridCryptoApp-Server\\HybridCryptoApp-Server.Data\\HybridCryptoApp-Server.Data.csproj",
-        "packagesPath": "C:\\Users\\Jurgen\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Jurgen\\source\\repos\\HybridCryptoApp-Server\\HybridCryptoApp-Server.Data\\obj\\",
+        "projectPath": "C:\\Users\\11800569\\Documents\\HybridCryptoAppServer\\HybridCryptoApp-Server.Data\\HybridCryptoApp-Server.Data.csproj",
+        "packagesPath": "C:\\Users\\11800569\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\11800569\\Documents\\HybridCryptoAppServer\\HybridCryptoApp-Server.Data\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\Jurgen\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\11800569\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -75,7 +75,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.201\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.101\\RuntimeIdentifierGraph.json"
         }
       }
     }

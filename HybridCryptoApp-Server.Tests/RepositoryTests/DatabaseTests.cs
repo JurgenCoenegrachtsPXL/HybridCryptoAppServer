@@ -25,6 +25,7 @@ namespace HybridCryptoApp_Server.Tests.RepositoryTests
         [TearDown]
         public void TearDown()
         {
+            Context.Database.EnsureDeleted();
             Context?.Dispose();
         }
 
@@ -43,7 +44,7 @@ namespace HybridCryptoApp_Server.Tests.RepositoryTests
                 //Check if migration succeeds on sqlite
                 try
                 {
-                    context.Database.Migrate();
+                    //context.Database.Migrate(); // <- EF doesn't like this
                 }
                 catch (Exception e)
                 {
@@ -68,8 +69,8 @@ namespace HybridCryptoApp_Server.Tests.RepositoryTests
                 AssertMigratedSuccessfully();
             }
 
-            //var options = new DbContextOptionsBuilder<StageOneContext>().UseSqlite(connection).Options;
-            var options = new DbContextOptionsBuilder<HybridCryptoAppContext>().UseInMemoryDatabase("StageOneTestDB").Options;
+            //var options = new DbContextOptionsBuilder<HybridCryptoAppContext>().UseSqlite(connection).Options;
+            var options = new DbContextOptionsBuilder<HybridCryptoAppContext>().UseInMemoryDatabase("HybridCryptoDB").Options;
 
             return new HybridCryptoAppContext(options);
         }

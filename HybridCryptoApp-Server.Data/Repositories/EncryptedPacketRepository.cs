@@ -34,7 +34,7 @@ namespace HybridCryptoApp_Server.Data.Repositories
         public void Update(EncryptedPacket existingItem)
         {
             // check if id exists
-            if (context.EncryptedPackets.Find(existingItem.Id) == null)
+            if (context.EncryptedPackets.Find(existingItem.Id) != null)
             {
                 context.EncryptedPackets.Update(existingItem);
                 context.SaveChanges();
@@ -49,7 +49,7 @@ namespace HybridCryptoApp_Server.Data.Repositories
         public void Delete(EncryptedPacket existingItem)
         {
             // check if id exists
-            if (context.EncryptedPackets.Find(existingItem.Id) == null)
+            if (context.EncryptedPackets.Find(existingItem.Id) != null)
             {
                 context.EncryptedPackets.Remove(existingItem);
                 context.SaveChanges();

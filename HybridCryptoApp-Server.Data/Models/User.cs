@@ -14,5 +14,15 @@ namespace HybridCryptoApp_Server.Data.Models
         /// XML representation of user's public RSA key
         /// </summary>
         public string PublicKeyXml { get; set; }
+
+        /// <summary>
+        /// First name of user
+        /// </summary>
+        public string FirstName { get; set; }
+
+        /// <summary>
+        /// Last name of user
+        /// </summary>
+        public string LastName { get; set; }
     }
 }

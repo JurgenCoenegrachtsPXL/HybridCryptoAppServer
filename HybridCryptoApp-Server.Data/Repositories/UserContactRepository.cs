@@ -25,38 +25,46 @@ namespace HybridCryptoApp_Server.Data.Repositories
         /// <inheritdoc />
         public void Add(UserContact newUserContact)
         {
-            // check if id exists
-            if (context.UserContacts.Find(newUserContact.OwnerId, newUserContact.ContactId) == null)
+            if(context.Users.Find(newUserContact.OwnerId) != null && context.Users.Find(newUserContact.ContactId) != null)
             {
-                context.UserContacts.Add(newUserContact);
-                context.SaveChanges();
+                // check if id exists
+                if (context.UserContacts.Find(newUserContact.OwnerId, newUserContact.ContactId) == null)
+                {
+                    context.UserContacts.Add(newUserContact);
+                    context.SaveChanges();
+                }
+                else
+                {
+                    throw new ArgumentException($"Usercontact with ownerId: {newUserContact.OwnerId} and contactId: {newUserContact.ContactId} already exists!");
+                }
             }
             else
             {
-                throw new ArgumentException($"Usercontact with ownerId: {newUserContact.OwnerId} and contactId: {newUserContact.ContactId} already exists!");
+                throw new ArgumentException($"User with id: {newUserContact.OwnerId} and/or id: {newUserContact.ContactId} does not exist!");
             }
         }
 
         /// <inheritdoc />
         public void Update(UserContact existingItem)
         {
-            // check if id exists
-            if (context.UserContacts.Find(existingItem.OwnerId, existingItem.ContactId) == null)
-            {
-                context.UserContacts.Update(existingItem);
-                context.SaveChanges();
-            }
-            else
-            {
-                throw new ArgumentException($"No UserContact found with ownerId: {existingItem.OwnerId} and contactId: {existingItem.ContactId} !");
-            }
+            //// check if id exists
+            //if (context.UserContacts.Find(existingItem.OwnerId, existingItem.ContactId) == null)
+            //{
+            //    context.UserContacts.Update(existingItem);
+            //    context.SaveChanges();
+            //}
+            //else
+            //{
+            //    throw new ArgumentException($"No UserContact found with ownerId: {existingItem.OwnerId} and contactId: {existingItem.ContactId} !");
+            //}
+            throw new ArgumentException("Update is not possible for UserContacts.");
         }
 
         /// <inheritdoc />
         public void Delete(UserContact existingItem)
         {
             // check if id exists
-            if (context.UserContacts.Find(existingItem.OwnerId, existingItem.ContactId) == null)
+            if (context.UserContacts.Find(existingItem.OwnerId, existingItem.ContactId) != null)
             {
                 context.UserContacts.Remove(existingItem);
                 context.SaveChanges();
