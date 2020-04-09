@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using HybridCryptoApp_Server.Data.Models;
+using HybridCryptoApp_Server.Data.Repositories;
 using HybridCryptoApp_Server.Data.Repositories.Interfaces;
 using HybridCryptoApp_Server.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -15,22 +16,35 @@ namespace HybridCryptoApp_Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles="RegularUser")]
     public class MessageController : ControllerBase
     {
         private readonly IEncryptedPacketRepository encryptedPacketRepository;
         private readonly UserManager<User> userManager;
+        private readonly IUserRepository userRepository;
 
         /// <inheritdoc />
-        public MessageController(IEncryptedPacketRepository encryptedPacketRepository, UserManager<User> userManager)
+        public MessageController(IEncryptedPacketRepository encryptedPacketRepository, UserManager<User> userManager, IUserRepository userRepository)
         {
             this.encryptedPacketRepository = encryptedPacketRepository;
             this.userManager = userManager;
+            this.userRepository = userRepository;
         }
 
         [HttpPost("NewMessage")]
         public async Task<IActionResult> SendNewMessage([FromBody] NewEncryptedPacketModel newMessage)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (userRepository.GetById(newMessage.ReceiverId) == null)
+            {
+                ModelState.AddModelError("error", "Receiver does not exist");
+                return BadRequest(ModelState);
+            }
+
             // convert model to EncryptedPacket
             EncryptedPacket encryptedPacket = new EncryptedPacket
             {
@@ -60,13 +74,13 @@ namespace HybridCryptoApp_Server.Controllers
         [HttpGet("AsReceiver")]
         public async Task<IActionResult> GetMessagesAsReceiver()
         {
-            return Ok(encryptedPacketRepository.GetAllPacketsOfReceiver((await GetUserAsync()).Id));
+            return Ok(encryptedPacketRepository.GetAllPacketsOfReceiver((await GetUserAsync()).Id).Select(e => new StrippedDownEncryptedPacket(e)));
         }
 
         [HttpGet("AsSender")]
         public async Task<IActionResult> GetMessagesAsSender()
         {
-            return Ok(encryptedPacketRepository.GetAllPacketsOfSender((await GetUserAsync()).Id));
+            return Ok(encryptedPacketRepository.GetAllPacketsOfSender((await GetUserAsync()).Id).Select(e => new StrippedDownEncryptedPacket(e)));
         }
 
         /// <summary>

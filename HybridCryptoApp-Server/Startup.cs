@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using HybridCryptoApp_Server.Data;
 using HybridCryptoApp_Server.Data.Models;
+using HybridCryptoApp_Server.Data.Repositories;
+using HybridCryptoApp_Server.Data.Repositories.Interfaces;
 using HybridCryptoApp_Server.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -33,13 +35,23 @@ namespace HybridCryptoApp_Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.AddDbContext<HybridCryptoAppContext>(options => options.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=HybridCryptoDB;Integrated Security=True;"), ServiceLifetime.Transient);
+
+
             services.AddControllers();
 
             services.AddDbContext<HybridCryptoAppContext>(options =>
             {
-                var connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=HybridCryptoDB;Integrated Security=True;";
-                options.UseSqlServer(connectionString);
-            });
+                if (Configuration.GetValue<bool>("UseInMemory", false))
+                {
+                    options.UseInMemoryDatabase("Kevin" + Guid.NewGuid());
+                }
+                else
+                {
+                    //var connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=HybridCryptoDB;Integrated Security=True;";
+                    options.UseSqlServer(Configuration.GetValue<string>("ConnectionString", @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=HybridCryptoDB;Integrated Security=True;"));
+                }
+            }, ServiceLifetime.Singleton);
 
             services.AddIdentity<User, Role>(options =>
                 {
@@ -74,6 +86,11 @@ namespace HybridCryptoApp_Server
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSettings.Key))
                     };
                 });
+
+            // Repositories
+            services.AddScoped<IEncryptedPacketRepository, EncryptedPacketRepository>();
+            services.AddScoped<IUserContactRepository, UserContactRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -84,10 +101,14 @@ namespace HybridCryptoApp_Server
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            if (Configuration.GetValue<bool>("UseHttps", false))
+            {
+                app.UseHttpsRedirection();
+            }
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

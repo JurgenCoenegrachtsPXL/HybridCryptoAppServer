@@ -9,8 +9,6 @@ namespace HybridCryptoApp_Server.Models
 {
     public class RegistrationModel
     {
-        public List<User> ContactList { get; set; }
-
         [Required]
         [EmailAddress]
         public string Email { get; set; }

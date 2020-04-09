@@ -4,7 +4,7 @@ using HybridCryptoApp_Server.Data.Repositories.Interfaces;
 
 namespace HybridCryptoApp_Server.Data.Repositories
 {
-    public class UserRepository : IBaseRepository<User>
+    public class UserRepository : IUserRepository
     {
         private readonly HybridCryptoAppContext context;
 

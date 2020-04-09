@@ -64,9 +64,13 @@ namespace HybridCryptoApp_Server.Data.Repositories
         public void Delete(UserContact existingItem)
         {
             // check if id exists
-            if (context.UserContacts.Find(existingItem.OwnerId, existingItem.ContactId) != null)
+            UserContact foundContact = context.UserContacts.Find(existingItem.OwnerId, existingItem.ContactId);
+            if (foundContact != null)
             {
-                context.UserContacts.Remove(existingItem);
+                foundContact = context.Entry(foundContact).Entity;
+
+                //context.UserContacts.Remove(existingItem);
+                context.UserContacts.Remove(foundContact);
                 context.SaveChanges();
             }
             else

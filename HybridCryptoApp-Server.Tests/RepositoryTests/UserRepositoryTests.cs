@@ -10,6 +10,7 @@ namespace HybridCryptoApp_Server.Tests.RepositoryTests
     {
         private UserRepository userRepository;
 
+
         private User ValidUser => new User()
         {
             Id = 0,

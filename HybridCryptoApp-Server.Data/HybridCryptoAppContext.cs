@@ -13,7 +13,7 @@ namespace HybridCryptoApp_Server.Data
         {
         }
 
-        public HybridCryptoAppContext(DbContextOptions options) : base(options)
+        public HybridCryptoAppContext(DbContextOptions<HybridCryptoAppContext> options) : base(options)
         {
         }
 
@@ -27,8 +27,8 @@ namespace HybridCryptoApp_Server.Data
 
             modelBuilder.Entity<User>().HasMany(u => u.ContactList).WithOne(u => u.Owner).OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<EncryptedPacket>().HasOne(e => e.Sender);
-            modelBuilder.Entity<EncryptedPacket>().HasOne(e => e.Receiver);
+            modelBuilder.Entity<EncryptedPacket>().HasOne(e => e.Sender).WithMany().OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<EncryptedPacket>().HasOne(e => e.Receiver).WithMany().OnDelete(DeleteBehavior.Restrict);
         }
 
         public void CreateOrUpdateDatabase()

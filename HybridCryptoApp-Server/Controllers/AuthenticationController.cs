@@ -37,6 +37,11 @@ namespace HybridCryptoApp_Server.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegistrationModel model) // zoeken in body niet header
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var user = new User
             {
                 UserName = model.Email,
@@ -65,6 +70,11 @@ namespace HybridCryptoApp_Server.Controllers
         [HttpPost("token")]
         public async Task<IActionResult> CreateToken([FromBody] LoginModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var user = await _userManager.FindByNameAsync(model.Email);
             if (user == null) return Unauthorized();
 

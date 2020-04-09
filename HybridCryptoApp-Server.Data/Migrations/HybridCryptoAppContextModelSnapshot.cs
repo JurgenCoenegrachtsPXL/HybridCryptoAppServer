@@ -19,6 +19,49 @@ namespace HybridCryptoApp_Server.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("HybridCryptoApp_Server.Data.Models.EncryptedPacket", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<byte>("DataType")
+                        .HasColumnType("tinyint");
+
+                    b.Property<byte[]>("EncryptedData")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("EncryptedSessionKey")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("Hmac")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("Iv")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<int>("ReceiverId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("SendDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("SenderId")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("Signature")
+                        .HasColumnType("varbinary(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReceiverId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("EncryptedPackets");
+                });
+
             modelBuilder.Entity("HybridCryptoApp_Server.Data.Models.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -69,6 +112,12 @@ namespace HybridCryptoApp_Server.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -91,6 +140,9 @@ namespace HybridCryptoApp_Server.Data.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("PublicKeyXml")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -229,6 +281,21 @@ namespace HybridCryptoApp_Server.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("HybridCryptoApp_Server.Data.Models.EncryptedPacket", b =>
+                {
+                    b.HasOne("HybridCryptoApp_Server.Data.Models.User", "Receiver")
+                        .WithMany()
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HybridCryptoApp_Server.Data.Models.User", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("HybridCryptoApp_Server.Data.Models.UserContact", b =>

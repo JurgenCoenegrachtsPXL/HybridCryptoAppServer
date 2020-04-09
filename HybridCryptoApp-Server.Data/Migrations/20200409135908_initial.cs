@@ -41,7 +41,10 @@ namespace HybridCryptoApp_Server.Data.Migrations
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false)
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    PublicKeyXml = table.Column<string>(nullable: true),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -155,6 +158,39 @@ namespace HybridCryptoApp_Server.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EncryptedPackets",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SenderId = table.Column<int>(nullable: false),
+                    ReceiverId = table.Column<int>(nullable: false),
+                    SendDateTime = table.Column<DateTime>(nullable: false),
+                    DataType = table.Column<byte>(nullable: false),
+                    EncryptedSessionKey = table.Column<byte[]>(nullable: true),
+                    Iv = table.Column<byte[]>(nullable: true),
+                    Hmac = table.Column<byte[]>(nullable: true),
+                    Signature = table.Column<byte[]>(nullable: true),
+                    EncryptedData = table.Column<byte[]>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EncryptedPackets", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EncryptedPackets_AspNetUsers_ReceiverId",
+                        column: x => x.ReceiverId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_EncryptedPackets_AspNetUsers_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserContacts",
                 columns: table => new
                 {
@@ -218,6 +254,16 @@ namespace HybridCryptoApp_Server.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_EncryptedPackets_ReceiverId",
+                table: "EncryptedPackets",
+                column: "ReceiverId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EncryptedPackets_SenderId",
+                table: "EncryptedPackets",
+                column: "SenderId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserContacts_ContactId",
                 table: "UserContacts",
                 column: "ContactId");
@@ -239,6 +285,9 @@ namespace HybridCryptoApp_Server.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "EncryptedPackets");
 
             migrationBuilder.DropTable(
                 name: "UserContacts");
