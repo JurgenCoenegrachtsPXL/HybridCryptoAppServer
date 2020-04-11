@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ using HybridCryptoApp_Server.Data.Models;
 using HybridCryptoApp_Server.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace HybridCryptoApp_Server.Tests.ControllerTests
@@ -15,6 +17,7 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
     {
         private const string AddPath = "/api/UserContact/add";
         private const string RemovePath = "/api/UserContact/remove";
+        private const string GetAllPath = "/api/UserContact/all";
 
         private User user;
 
@@ -164,6 +167,33 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
             HttpResponseMessage result = await Client.PostAsync(RemovePath, Stringify(model));
 
             Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+        }
+
+        [Test]
+        public async Task GetAll_Should_Return_Ok()
+        {
+            HttpResponseMessage response = await Client.GetAsync(GetAllPath);
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+        }
+
+        [Test]
+        public async Task GetAll_Should_Return_A_List_Of_Contacts()
+        {
+            HttpResponseMessage response = await Client.GetAsync(GetAllPath);
+            string content = await response.Content.ReadAsStringAsync();
+
+            Assert.That(() => JsonConvert.DeserializeObject<List<ContactInformationModel>>(content), Throws.Nothing);
+        }
+
+        [Test]
+        public async Task GetAll_Should_Return_All_Contacts_Of_Logged_In_User()
+        {
+            HttpResponseMessage response = await Client.GetAsync(GetAllPath);
+            string content = await response.Content.ReadAsStringAsync();
+            List<ContactInformationModel> models = JsonConvert.DeserializeObject<List<ContactInformationModel>>(content);
+
+            CollectionAssert.AreEquivalent(Context.UserContacts.Where(u => u.OwnerId == user.Id).Select(u => u.ContactId), models.Select(c => c.Id));
         }
     }
 }

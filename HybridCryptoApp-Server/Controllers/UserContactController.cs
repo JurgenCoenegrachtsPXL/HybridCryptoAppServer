@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using HybridCryptoApp_Server.Data.Models;
@@ -25,6 +27,11 @@ namespace HybridCryptoApp_Server.Controllers
             this.userContactRepository = userContactRepository;
         }
 
+        /// <summary>
+        /// Add a new contact
+        /// </summary>
+        /// <param name="userContactModel"></param>
+        /// <returns></returns>
         [HttpPost("Add")]
         public async Task<IActionResult> AddUserContact([FromBody] UserContactModel userContactModel)
         {
@@ -51,6 +58,11 @@ namespace HybridCryptoApp_Server.Controllers
             }
         }
 
+        /// <summary>
+        /// Remove an existing contact
+        /// </summary>
+        /// <param name="userContactModel"></param>
+        /// <returns></returns>
         [HttpPost("Remove")]
         public async Task<IActionResult> RemoveUserContact([FromBody] UserContactModel userContactModel)
         {
@@ -75,6 +87,32 @@ namespace HybridCryptoApp_Server.Controllers
             {
                 return BadRequest(e.Message);
             }
+        }
+
+        /// <summary>
+        /// Get all contacts of currently logged in user
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAll()
+        {
+            List<int> ids = userContactRepository.GetUserContactsOfUser((await GetUserAsync()).Id).Select(u => u.ContactId).ToList();
+            List<ContactInformationModel> models = new List<ContactInformationModel>();
+            
+            foreach (int id in ids)
+            {
+                User other = await userManager.FindByIdAsync(id.ToString());
+
+                models.Add(new ContactInformationModel()
+                {
+                    Id = id,
+                    FirstName = other.FirstName,
+                    LastName = other.LastName,
+					PublicKey = other.PublicKeyXml
+                });
+            }
+
+            return Ok(models);
         }
 
         /// <summary>
