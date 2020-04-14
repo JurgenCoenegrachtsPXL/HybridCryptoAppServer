@@ -74,7 +74,7 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
             return new StringContent(JsonConvert.SerializeObject(obj), Encoding.UTF8, "application/json");
         }
 
-        public async Task LoginAsNewUser()
+        public async Task<string> LoginAsNewUser()
         {
             byte[] buffer = new byte[16];
             Random.NextBytes(buffer);
@@ -96,6 +96,8 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
             string token = await result.Content.ReadAsStringAsync();
 
             Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            return registration.Email;
         }
 
         public async Task LoginAsExistingUser(string email, string password)

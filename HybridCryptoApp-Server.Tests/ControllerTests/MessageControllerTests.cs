@@ -52,7 +52,8 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
                 FirstName="Hallo",
                 LastName="Test",
                 UserName = "user@pxl.be",
-                Email = "user@pxl.be"
+                Email = "user@pxl.be",
+                PublicKeyXml = "aSomewhatRandomKey"
             };
             var result = await userManager.CreateAsync(user, "ThisIsPassword123");
             string role = Role.RegularUser;
