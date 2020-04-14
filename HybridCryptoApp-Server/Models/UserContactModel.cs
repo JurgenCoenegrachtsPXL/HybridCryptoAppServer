@@ -4,7 +4,9 @@ namespace HybridCryptoApp_Server.Models
 {
     public class UserContactModel
     {
-        [Required]
         public int ContactId { get; set; }
+
+        [EmailAddress]
+        public string ContactEmail { get; set; }
     }
 }

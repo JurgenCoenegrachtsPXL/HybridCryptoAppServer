@@ -32,8 +32,8 @@ namespace HybridCryptoApp_Server.Controllers
         /// </summary>
         /// <param name="userContactModel"></param>
         /// <returns></returns>
-        [HttpPost("Add")]
-        public async Task<IActionResult> AddUserContact([FromBody] UserContactModel userContactModel)
+        [HttpPost("AddById")]
+        public async Task<IActionResult> AddUserContactById([FromBody] UserContactModel userContactModel)
         {
             if (!ModelState.IsValid)
             {
@@ -42,12 +42,55 @@ namespace HybridCryptoApp_Server.Controllers
 
             User user = await GetUserAsync();
 
+            if (await userManager.FindByIdAsync(userContactModel.ContactId.ToString()) == null)
+            {
+                return BadRequest("No user with specified id found");
+            }
+
             try
             {
                 userContactRepository.Add(new UserContact()
                 {
                     OwnerId = user.Id,
                     ContactId = userContactModel.ContactId
+                });
+
+                return Ok();
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Add a new contact
+        /// </summary>
+        /// <param name="userContactModel"></param>
+        /// <returns></returns>
+        [HttpPost("AddByEmail")]
+        public async Task<IActionResult> AddUserContactByEmail([FromBody] UserContactModel userContactModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            User user = await GetUserAsync();
+
+            // find other user
+            User contact = await userManager.FindByEmailAsync(userContactModel.ContactEmail);
+            if (contact == null)
+            {
+                return BadRequest("No user with specified email found");
+            }
+
+            try
+            {
+                userContactRepository.Add(new UserContact()
+                {
+                    OwnerId = user.Id,
+                    ContactId = contact.Id
                 });
 
                 return Ok();

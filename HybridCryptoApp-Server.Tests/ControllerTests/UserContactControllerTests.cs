@@ -15,7 +15,8 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
     [TestFixture]
     public class UserContactControllerTests : ServerTests
     {
-        private const string AddPath = "/api/UserContact/add";
+        private const string AddByIdPath = "/api/UserContact/AddById";
+        private const string AddByEmailPath = "/api/UserContact/AddByEmail";
         private const string RemovePath = "/api/UserContact/remove";
         private const string GetAllPath = "/api/UserContact/all";
 
@@ -24,6 +25,7 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
         private UserContactModel ValidUserContactModel => new UserContactModel()
         {
             ContactId = user.Id,
+            ContactEmail = user.Email
         };
 
         [SetUp]
@@ -50,39 +52,39 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
         }
 
         [Test]
-        public async Task Add_Should_Add_New_UserContact_To_Context()
+        public async Task AddById_Should_Add_New_UserContact_To_Context()
         {
             UserContactModel model = ValidUserContactModel;
             int beforeCount = Context.UserContacts.Count();
 
-            HttpResponseMessage result = await Client.PostAsync(AddPath, Stringify(model));
+            HttpResponseMessage result = await Client.PostAsync(AddByIdPath, Stringify(model));
             int afterCount = Context.UserContacts.Count();
             Assert.That(afterCount, Is.EqualTo(beforeCount + 1));
         }
 
         [Test]
-        public async Task Add_Should_Return_Ok_If_Contact_Id_Is_An_Existing_User()
+        public async Task AddById_Should_Return_Ok_If_Contact_Id_Is_An_Existing_User()
         {
             UserContactModel model = ValidUserContactModel;
             
-            HttpResponseMessage result = await Client.PostAsync(AddPath, Stringify(model));
+            HttpResponseMessage result = await Client.PostAsync(AddByIdPath, Stringify(model));
             
             Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.OK));
         }
 
         [Test]
-        public async Task Add_Should_Return_Bad_Request_If_ContactId_Is_Not_An_Existing_User()
+        public async Task AddById_Should_Return_Bad_Request_If_ContactId_Is_Not_An_Existing_User()
         {
             UserContactModel model = ValidUserContactModel;
             model.ContactId = -5;
 
-            HttpResponseMessage result = await Client.PostAsync(AddPath, Stringify(model));
+            HttpResponseMessage result = await Client.PostAsync(AddByIdPath, Stringify(model));
 
             Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
         }
 
         [Test]
-        public async Task Add_Should_Return_Bad_Request_If_UserContact_Already_Exists()
+        public async Task AddById_Should_Return_Bad_Request_If_UserContact_Already_Exists()
         {
             Context.UserContacts.Add(new UserContact()
             {
@@ -92,12 +94,61 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
             Context.SaveChanges();
 
             UserContactModel model = ValidUserContactModel;
-            model.ContactId = -5;
 
-            HttpResponseMessage result = await Client.PostAsync(AddPath, Stringify(model));
+            HttpResponseMessage result = await Client.PostAsync(AddByIdPath, Stringify(model));
 
             Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
         }
+
+        [Test]
+        public async Task AddByEmail_Should_Add_New_UserContact_To_Context()
+        {
+            UserContactModel model = ValidUserContactModel;
+            int beforeCount = Context.UserContacts.Count();
+
+            HttpResponseMessage result = await Client.PostAsync(AddByEmailPath, Stringify(model));
+            int afterCount = Context.UserContacts.Count();
+            Assert.That(afterCount, Is.EqualTo(beforeCount + 1));
+        }
+
+        [Test]
+        public async Task AddByEmail_Should_Return_Ok_If_Contact_Email_Is_An_Existing_User()
+        {
+            UserContactModel model = ValidUserContactModel;
+
+            HttpResponseMessage result = await Client.PostAsync(AddByEmailPath, Stringify(model));
+
+            Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+        }
+
+        [Test]
+        public async Task AddByEmail_Should_Return_Bad_Request_If_ContactEmail_Is_Not_An_Existing_User()
+        {
+            UserContactModel model = ValidUserContactModel;
+            model.ContactEmail = model.ContactEmail + "randomTextAndStuffs";
+
+            HttpResponseMessage result = await Client.PostAsync(AddByEmailPath, Stringify(model));
+
+            Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+        }
+
+        [Test]
+        public async Task AddByEmail_Should_Return_Bad_Request_If_UserContact_Already_Exists()
+        {
+            Context.UserContacts.Add(new UserContact()
+            {
+                ContactId = user.Id,
+                OwnerId = user.Id,
+            });
+            Context.SaveChanges();
+
+            UserContactModel model = ValidUserContactModel;
+
+            HttpResponseMessage result = await Client.PostAsync(AddByEmailPath, Stringify(model));
+
+            Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+        }
+
 
         [Test]
         public async Task Remove_Should_Remove_Existing_UserContact_From_Context()

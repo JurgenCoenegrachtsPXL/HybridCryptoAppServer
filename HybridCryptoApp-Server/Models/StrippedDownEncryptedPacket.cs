@@ -65,12 +65,14 @@ namespace HybridCryptoApp_Server.Models
 
             Receiver = new StrippedDownUser(encryptedPacket.Receiver);
             Sender = new StrippedDownUser(encryptedPacket.Sender);
+            SendDateTime = encryptedPacket.SendDateTime;
 
+            DataType = encryptedPacket.DataType;
+            EncryptedSessionKey = encryptedPacket.EncryptedSessionKey;
             Iv = encryptedPacket.Iv;
+            EncryptedData = encryptedPacket.EncryptedData;
             Hmac = encryptedPacket.Hmac;
             Signature = encryptedPacket.Signature;
-            EncryptedData = encryptedPacket.EncryptedData;
-            EncryptedSessionKey = encryptedPacket.EncryptedSessionKey;
         }
     }
 }
