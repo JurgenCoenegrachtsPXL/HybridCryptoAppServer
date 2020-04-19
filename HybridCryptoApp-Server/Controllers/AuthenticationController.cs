@@ -86,7 +86,11 @@ namespace HybridCryptoApp_Server.Controllers
             }
 
             var token = await CreateJwtToken(user);
-            return Ok(token);
+            return Ok(new LoginResponseModel()
+            {
+                Token = token,
+                Name = user.Fullname
+            });
         }
 
         /// <summary>

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using HybridCryptoApp_Server.Data.Models;
 using HybridCryptoApp_Server.Data.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace HybridCryptoApp_Server.Data.Repositories
 {
@@ -69,25 +71,38 @@ namespace HybridCryptoApp_Server.Data.Repositories
         /// <inheritdoc />
         public List<EncryptedPacket> GetAllPacketsOfReceiver(int receiverId)
         {
-            return context.EncryptedPackets.Where(e => e.ReceiverId == receiverId).ToList();
+            return context.EncryptedPackets.Where(e => e.IsMeantForReceiver && e.ReceiverId == receiverId).ToList();
         }
 
         /// <inheritdoc />
         public List<EncryptedPacket> GetAllPacketsOfSender(int senderId)
         {
-            return context.EncryptedPackets.Where(e => e.SenderId == senderId).ToList();
+            return context.EncryptedPackets.Where(e => !e.IsMeantForReceiver && e.SenderId == senderId).ToList();
         }
 
         /// <inheritdoc />
         public List<EncryptedPacket> GetAllPacketsOfReceiver(int receiverId, DateTime after)
         {
-            return context.EncryptedPackets.Where(e => e.ReceiverId == receiverId && e.SendDateTime >= after).ToList();
+            return context.EncryptedPackets.Where(e => e.IsMeantForReceiver && e.ReceiverId == receiverId && e.SendDateTime >= after).ToList();
         }
 
         /// <inheritdoc />
         public List<EncryptedPacket> GetAllPacketsOfSender(int senderId, DateTime after)
         {
-            return context.EncryptedPackets.Where(e => e.SenderId == senderId && e.SendDateTime >= after).ToList();
+            return context.EncryptedPackets.Where(e => !e.IsMeantForReceiver && e.SenderId == senderId && e.SendDateTime >= after).ToList();
+        }
+
+        /// <summary>
+        /// Get all packets sent between two users
+        /// </summary>
+        /// <param name="user1Id"></param>
+        /// <param name="user2Id"></param>
+        /// <returns></returns>
+        public async Task<List<EncryptedPacket>> GetAllPacketsBetweenUsers(int user1Id, int user2Id)
+        {
+            return await context.EncryptedPackets.Where(e => e.SenderId == user1Id && e.ReceiverId == user2Id || 
+                                                                         e.SenderId == user2Id && e.ReceiverId == user1Id)
+                                                 .ToListAsync();
         }
     }
 }

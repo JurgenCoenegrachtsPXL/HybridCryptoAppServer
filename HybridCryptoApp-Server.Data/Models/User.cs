@@ -24,5 +24,10 @@ namespace HybridCryptoApp_Server.Data.Models
         /// Last name of user
         /// </summary>
         public string LastName { get; set; }
+
+        /// <summary>
+        /// Full name of user
+        /// </summary>
+        public string Fullname => FirstName + " " + LastName;
     }
 }

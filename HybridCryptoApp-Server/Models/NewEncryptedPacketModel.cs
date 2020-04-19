@@ -46,5 +46,10 @@ namespace HybridCryptoApp_Server.Models
         /// </summary>
         [Required]
         public byte[] EncryptedData { get; set; }
+
+        /// <summary>
+        /// Is packet meant for listed receiver
+        /// </summary>
+        public bool MeantForReceiver { get; set; } = true;
     }
 }

@@ -18,6 +18,7 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
         private const string NewMessagePath = "/api/Message/NewMessage";
         private const string AsReceiverPath = "/api/Message/AsReceiver";
         private const string AsSenderPath = "/api/Message/AsSender";
+        private const string GetMessagesOfContactPath = "/api/Message/OfContact/";
 
         private User user;
 
@@ -205,5 +206,51 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
             Assert.That(list.Count, Is.EqualTo(2));
         }
 
+        [Test]
+        public async Task GetMessagesOfContact_Should_Return_Ok()
+        {
+            // add two encrypted messages
+            await Client.PostAsync(NewMessagePath, Stringify(ValidEncryptedPacket));
+            await Client.PostAsync(NewMessagePath, Stringify(ValidEncryptedPacket));
+
+            HttpResponseMessage response = await Client.GetAsync(GetMessagesOfContactPath + ValidEncryptedPacket.ReceiverId);
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+        }
+
+        [Test]
+        public async Task GetMessagesOfContact_Should_Return_Bad_Request_If_Contact_Does_Not_Exist()
+        {
+            int userIdThatDoesNotExist = -10234;
+
+            HttpResponseMessage response = await Client.GetAsync(GetMessagesOfContactPath + userIdThatDoesNotExist);
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+        }
+
+        [Test]
+        public async Task GetMessagesOfContact_Should_Return_List_Of_StrippedDownEncryptedPackets()
+        {
+            // add two encrypted messages
+            await Client.PostAsync(NewMessagePath, Stringify(ValidEncryptedPacket));
+            await Client.PostAsync(NewMessagePath, Stringify(ValidEncryptedPacket));
+
+            HttpResponseMessage response = await Client.GetAsync(GetMessagesOfContactPath + ValidEncryptedPacket.ReceiverId);
+            string content = await response.Content.ReadAsStringAsync();
+
+            Assert.That(() => JsonConvert.DeserializeObject<List<StrippedDownEncryptedPacket>>(content), Throws.Nothing);
+        }
+
+        [Test]
+        public async Task GetMessagesOfContact_Should_Return_Non_Empty_List()
+        {
+            // add two encrypted messages
+            await Client.PostAsync(NewMessagePath, Stringify(ValidEncryptedPacket));
+            await Client.PostAsync(NewMessagePath, Stringify(ValidEncryptedPacket));
+
+            HttpResponseMessage response = await Client.GetAsync(GetMessagesOfContactPath + ValidEncryptedPacket.ReceiverId);
+            string content = await response.Content.ReadAsStringAsync();
+
+            Assert.That(content, Is.Not.Null);
+            Assert.That(content, Is.Not.Empty);
+        }
     }
 }

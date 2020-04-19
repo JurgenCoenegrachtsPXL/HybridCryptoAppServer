@@ -51,10 +51,10 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
             Random = new Random();
         }
 
+        [TearDown]
         public void ServerTearDown()
         {
             Context?.Database?.EnsureDeleted();
-            Context?.Dispose();
 
             Dispose();
         }
@@ -93,7 +93,8 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
 
             await Client.PostAsync("/api/Authentication/register", Stringify(registration));
             var result = await Client.PostAsync("/api/Authentication/token", Stringify(login));
-            string token = await result.Content.ReadAsStringAsync();
+            string content = await result.Content.ReadAsStringAsync();
+            string token = JsonConvert.DeserializeObject<LoginResponseModel>(content).Token;
 
             Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
@@ -109,7 +110,8 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
             };
 
             var result = await Client.PostAsync("/api/Authentication/token", Stringify(login));
-            string token = await result.Content.ReadAsStringAsync();
+            string content = await result.Content.ReadAsStringAsync();
+            string token = JsonConvert.DeserializeObject<LoginResponseModel>(content).Token;
 
             Client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
         }

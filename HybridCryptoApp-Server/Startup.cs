@@ -35,11 +35,12 @@ namespace HybridCryptoApp_Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // uncomment for database migrations
             //services.AddDbContext<HybridCryptoAppContext>(options => options.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=HybridCryptoDB;Integrated Security=True;"), ServiceLifetime.Transient);
 
 
             services.AddControllers();
-
+            
             services.AddDbContext<HybridCryptoAppContext>(options =>
             {
                 if (Configuration.GetValue<bool>("UseInMemory", false))
@@ -52,7 +53,7 @@ namespace HybridCryptoApp_Server
                     options.UseSqlServer(Configuration.GetValue<string>("ConnectionString", @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=HybridCryptoDB;Integrated Security=True;"));
                 }
             }, ServiceLifetime.Singleton);
-
+            
             services.AddIdentity<User, Role>(options =>
                 {
                     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);

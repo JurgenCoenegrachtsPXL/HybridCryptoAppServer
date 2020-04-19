@@ -48,5 +48,10 @@ namespace HybridCryptoApp_Server.Data.Models
         /// Actual data encrypted with EAS
         /// </summary>
         public byte[] EncryptedData { get; set; }
+
+        /// <summary>
+        /// Packet is meant for the person who is marked as receiver
+        /// </summary>
+        public bool IsMeantForReceiver { get; set; } = true;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using HybridCryptoApp_Server.Data.Models;
 
 namespace HybridCryptoApp_Server.Data.Repositories.Interfaces
@@ -42,5 +43,13 @@ namespace HybridCryptoApp_Server.Data.Repositories.Interfaces
         /// <param name="after">Time after which packets should have been send</param>
         /// <returns></returns>
         List<EncryptedPacket> GetAllPacketsOfSender(int senderId, DateTime after);
+
+        /// <summary>
+        /// Get all packets sent between two users
+        /// </summary>
+        /// <param name="user1Id"></param>
+        /// <param name="user2Id"></param>
+        /// <returns></returns>
+        Task<List<EncryptedPacket>> GetAllPacketsBetweenUsers(int user1Id, int user2Id);
     }
 }

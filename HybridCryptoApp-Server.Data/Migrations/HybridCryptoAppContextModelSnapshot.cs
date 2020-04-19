@@ -38,6 +38,9 @@ namespace HybridCryptoApp_Server.Data.Migrations
                     b.Property<byte[]>("Hmac")
                         .HasColumnType("varbinary(max)");
 
+                    b.Property<bool>("IsMeantForReceiver")
+                        .HasColumnType("bit");
+
                     b.Property<byte[]>("Iv")
                         .HasColumnType("varbinary(max)");
 

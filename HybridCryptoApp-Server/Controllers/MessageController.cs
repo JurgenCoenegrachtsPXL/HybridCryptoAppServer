@@ -56,7 +56,8 @@ namespace HybridCryptoApp_Server.Controllers
                 ReceiverId = newMessage.ReceiverId,
                 Signature = newMessage.Signature,
                 SenderId = (await GetUserAsync()).Id,
-                SendDateTime = DateTime.Now
+                SendDateTime = DateTime.Now,
+                IsMeantForReceiver = newMessage.MeantForReceiver
             };
 
             // try to add to database
@@ -81,6 +82,32 @@ namespace HybridCryptoApp_Server.Controllers
         public async Task<IActionResult> GetMessagesAsSender()
         {
             return Ok(encryptedPacketRepository.GetAllPacketsOfSender((await GetUserAsync()).Id).Select(e => new StrippedDownEncryptedPacket(e)));
+        }
+
+        [HttpPost("AsReceiverAfter")]
+        public async Task<IActionResult> GetMessagesAsReceiverAfter([FromBody] MessagesAfterModel model)
+        {
+            return Ok(encryptedPacketRepository.GetAllPacketsOfReceiver((await GetUserAsync()).Id, model.DateTime).Select(e => new StrippedDownEncryptedPacket(e)));
+        }
+
+        [HttpPost("AsSenderAfter")]
+        public async Task<IActionResult> GetMessagesAsSenderAfter([FromBody] MessagesAfterModel model)
+        {
+            return Ok(encryptedPacketRepository.GetAllPacketsOfSender((await GetUserAsync()).Id, model.DateTime).Select(e => new StrippedDownEncryptedPacket(e)));
+        }
+
+        [HttpGet("OfContact/{id}")]
+        public async Task<IActionResult> GetMessagesOfContact(int id)
+        {
+            User user = await GetUserAsync();
+            User contact = userRepository.GetById(id);
+            if (contact == null)
+            {
+                return BadRequest();
+            }
+
+            List<EncryptedPacket> packets = await encryptedPacketRepository.GetAllPacketsBetweenUsers(user.Id, contact.Id);
+            return Ok(packets.Select(e => new StrippedDownEncryptedPacket(e)));
         }
 
         /// <summary>
