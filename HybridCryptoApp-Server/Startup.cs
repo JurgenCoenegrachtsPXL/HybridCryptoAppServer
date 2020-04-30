@@ -58,7 +58,7 @@ namespace HybridCryptoApp_Server
                     options.Lockout.MaxFailedAccessAttempts = 5;
                     options.Lockout.AllowedForNewUsers = true;
 
-                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireNonAlphanumeric = true;
                     options.Password.RequiredLength = 8;
 
                     options.SignIn.RequireConfirmedEmail = false;
