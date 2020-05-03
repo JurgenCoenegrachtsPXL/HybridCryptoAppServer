@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -37,17 +38,18 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
                 FirstName = "Hallo",
                 LastName = "Test",
                 UserName = "user@pxl.be",
-                Email = "user@pxl.be"
+                Email = "user@pxl.be",
+                SecurityStamp = Guid.NewGuid().ToString()
             };
-            await userManager.CreateAsync(user, "ThisIsPassword123");
+            await userManager.CreateAsync(user, "ThisIsPassword123@");
             string role = Role.RegularUser;
-            await EnsureRoleExists(role); // we geven de rol mee, we kijken of het bestaat 
+            await EnsureRoleExists(role); // we geven de rol mee, we kijken of het bestaat
             await userManager.AddToRoleAsync(user, role);
 
             user = await userManager.FindByEmailAsync(user.Email);
 
             //User is altijd ingelogd
-            await LoginAsExistingUser("user@pxl.be", "ThisIsPassword123");
+            await LoginAsExistingUser("user@pxl.be", "ThisIsPassword123@");
         }
 
         [Test]

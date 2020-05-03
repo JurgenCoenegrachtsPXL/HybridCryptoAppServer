@@ -160,6 +160,11 @@ namespace HybridCryptoApp_Server.Tests.RepositoryTests {
                 encryptedPackets.Add(CreateRandomEncryptedPacketWithData(user2.Id, user1.Id, DateTime.Now.AddHours(i)));
             }
 
+            foreach (EncryptedPacket encryptedPacket in encryptedPackets)
+            {
+                encryptedPacket.IsMeantForReceiver = false;
+            }
+
             Context.AddRange(encryptedPackets);
             Context.SaveChanges();
 
@@ -176,6 +181,11 @@ namespace HybridCryptoApp_Server.Tests.RepositoryTests {
             for (int i = 0; i < 5; i++) // 5 packets toevoegen aan context
             {
                 encryptedPackets.Add(CreateRandomEncryptedPacketWithData(user2.Id, user1.Id, DateTime.Now.AddHours(i)));
+            }
+
+            foreach (EncryptedPacket encryptedPacket in encryptedPackets)
+            {
+                encryptedPacket.IsMeantForReceiver = false;
             }
 
             Context.AddRange(encryptedPackets);

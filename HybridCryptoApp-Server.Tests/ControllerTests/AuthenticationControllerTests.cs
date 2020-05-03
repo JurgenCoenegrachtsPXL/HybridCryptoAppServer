@@ -15,10 +15,12 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
         private const string LoginPath = "/api/Authentication/token";
         private const string ChangeKeyPath = "/api/Authentication/changeKey";
 
+        private static string StrongPassword => "TestPass12345@";
+
         private RegistrationModel ValidRegistrationModel => new RegistrationModel
         {
             Email = $"emailnumber{emailCounter++}@test.test",
-            Password = "SecurePassword1",
+            Password = StrongPassword,
             LastName = "last name",
             FirstName = "first",
             PublicKey = "fes4f56se4f56se4f",
@@ -43,7 +45,7 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
         public async Task Register_With_Password_That_Not_Contains_Upper_Letter_Should_Return_BadRequest()
         {
             RegistrationModel registrationModel = ValidRegistrationModel;
-            registrationModel.Password = "test12345";
+            registrationModel.Password = StrongPassword.ToLower();
 
             HttpResponseMessage result = await Client.PostAsync(RegistrationPath, Stringify(registrationModel));
 
@@ -54,7 +56,7 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
         public async Task Register_With_Password_That_Not_Contains_8_Characters_Should_Return_BadRequest()
         {
             RegistrationModel registrationModel = ValidRegistrationModel;
-            registrationModel.Password = "Test";
+            registrationModel.Password = "T3st#";
 
             HttpResponseMessage result = await Client.PostAsync(RegistrationPath, Stringify(registrationModel));
 
@@ -65,7 +67,7 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
         public async Task Register_With_Password_That_Does_Not_Contains_1_Number_Should_Return_BadRequest()
         {
             RegistrationModel registrationModel = ValidRegistrationModel;
-            registrationModel.Password = "Testtestttt";
+            registrationModel.Password = "Testtestttt@";
 
             HttpResponseMessage result = await Client.PostAsync(RegistrationPath, Stringify(registrationModel));
 
@@ -76,7 +78,7 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
         public async Task Login_Should_Return_Ok_If_Email_And_Password_Are_Valid()
         {
             string email = "test.test17@test.test";
-            string password = "Test12345";
+            string password = StrongPassword;
 
             await RegisterUser(email, password).ConfigureAwait(false);
 
@@ -95,7 +97,7 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
         public async Task Login_Should_Return_A_Token_As_String_If_Email_And_Password_Are_Valid()
         {
             string email = "test.test1@test.test";
-            string password = "Test12345";
+            string password = StrongPassword;
 
             await RegisterUser(email, password).ConfigureAwait(false);
 
@@ -117,7 +119,7 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
             LoginModel loginmodel = new LoginModel
             {
                 Email = "test.test.test",
-                Password = "Test12345"
+                Password = StrongPassword
             };
 
             HttpResponseMessage result = await Client.PostAsync(LoginPath, Stringify(loginmodel));
@@ -129,11 +131,11 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
         public async Task Login_Should_Return_Unauthorized_If_No_User_With_Email_Exists()
         {
             // arrange
-            await RegisterUser("test2@pxl.be", "Test12345").ConfigureAwait(false);
+            await RegisterUser("test2@pxl.be", StrongPassword).ConfigureAwait(false);
             LoginModel loginmodel = new LoginModel
             {
                 Email = "test@pxl.be",
-                Password = "Test12345"
+                Password = StrongPassword
             };
 
             // act
@@ -147,7 +149,7 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
         public async Task Login_Should_Return_Unauthorized_If_Password_Is_Wrong()
         {
             // arrange
-            await RegisterUser("test2@pxl.be", "Test12345").ConfigureAwait(false);
+            await RegisterUser("test2@pxl.be", StrongPassword).ConfigureAwait(false);
             LoginModel loginmodel = new LoginModel
             {
                 Email = "test2@pxl.be",
@@ -164,8 +166,8 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
         [Test]
         public async Task ChangeKey_Should_Change_Key_Of_User()
         {
-            await RegisterUser("test17@pxl.be", "Test12345").ConfigureAwait(false);
-            await LoginAsExistingUser("test17@pxl.be", "Test12345");
+            await RegisterUser("test17@pxl.be", "Test12345@").ConfigureAwait(false);
+            await LoginAsExistingUser("test17@pxl.be", "Test12345@");
 
             ChangeKeyModel changeKeyModel = ValidChangeKeyModel;
 
@@ -177,8 +179,8 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
         [Test]
         public async Task ChangeKey_Should_Return_Ok()
         {
-            await RegisterUser("test17@pxl.be", "Test12345").ConfigureAwait(false);
-            await LoginAsExistingUser("test17@pxl.be", "Test12345");
+            await RegisterUser("test17@pxl.be", StrongPassword).ConfigureAwait(false);
+            await LoginAsExistingUser("test17@pxl.be", StrongPassword);
 
             ChangeKeyModel changeKeyModel = ValidChangeKeyModel;
 
@@ -190,8 +192,8 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
         [Test]
         public async Task ChangeKey_Should_Return_Bad_Request_If_Key_Field_Is_Eloty()
         {
-            await RegisterUser("test17@pxl.be", "Test12345").ConfigureAwait(false);
-            await LoginAsExistingUser("test17@pxl.be", "Test12345");
+            await RegisterUser("test17@pxl.be", StrongPassword).ConfigureAwait(false);
+            await LoginAsExistingUser("test17@pxl.be", StrongPassword);
 
             ChangeKeyModel changeKeyModel = ValidChangeKeyModel;
             changeKeyModel.NewKey = "";

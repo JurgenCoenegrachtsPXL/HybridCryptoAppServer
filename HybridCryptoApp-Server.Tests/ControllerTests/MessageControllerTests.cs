@@ -43,6 +43,7 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
             Signature = RandomBytes(256),
 
             ReceiverId = user.Id,
+            MeantForReceiver = true
         };
 
         [SetUp]
@@ -57,16 +58,15 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
                 Email = "user@pxl.be",
                 PublicKeyXml = "aSomewhatRandomKey"
             };
-            var result = await userManager.CreateAsync(user, "ThisIsPassword123");
+            await userManager.CreateAsync(user, "ThisIsPassword123@");
             string role = Role.RegularUser;
             await EnsureRoleExists(role); // we geven de rol mee, we kijken of het bestaat 
-            result = await userManager.AddToRoleAsync(user, role);
+            await userManager.AddToRoleAsync(user, role);
 
             user = await userManager.FindByEmailAsync(user.Email);
 
             //User is altijd ingelogd
-            //await LoginAsNewUser();
-            await LoginAsExistingUser("user@pxl.be", "ThisIsPassword123");
+            await LoginAsExistingUser("user@pxl.be", "ThisIsPassword123@");
         }
 
         #region SendNewMessage method
@@ -184,6 +184,9 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
         [Test]
         public async Task GetMessagesAsSender_Should_Return_List_Of_StrippedDownEncryptedPackets()
         {
+            NewEncryptedPacketModel packet = ValidEncryptedPacket;
+            packet.MeantForReceiver = false;
+
             HttpResponseMessage response = await Client.GetAsync(AsSenderPath);
 
             string responseString = await response.Content.ReadAsStringAsync();
@@ -196,8 +199,11 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
         public async Task GetMessagesAsSender_Should_Return_List_Of_StrippedDownEncryptedPackets_With_2_Values()
         {
             // add two encrypted messages
-            await Client.PostAsync(NewMessagePath, Stringify(ValidEncryptedPacket));
-            await Client.PostAsync(NewMessagePath, Stringify(ValidEncryptedPacket));
+            NewEncryptedPacketModel packet = ValidEncryptedPacket;
+            packet.MeantForReceiver = false;
+
+            await Client.PostAsync(NewMessagePath, Stringify(packet));
+            await Client.PostAsync(NewMessagePath, Stringify(packet));
 
             HttpResponseMessage response = await Client.GetAsync(AsSenderPath);
 
