@@ -38,7 +38,7 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
                 .UseConfiguration(new ConfigurationBuilder()
                     .SetBasePath(mainDirectory)
                     .AddJsonFile("appsettings.json")
-                    .AddJsonFile("appsettings.development.json")
+                    .AddJsonFile("appsettings.Development.json")
                     .Build())
             );
 
