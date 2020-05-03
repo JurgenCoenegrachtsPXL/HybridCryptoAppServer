@@ -29,7 +29,7 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
         [SetUp]
         public void ServerSetUp()
         {
-            var mainDirectory = Directory.GetParent(TestContext.CurrentContext.TestDirectory).Parent.Parent.Parent.FullName + "\\HybridCryptoApp-Server";
+            string mainDirectory = Directory.GetCurrentDirectory();
 
             Server = new TestServer(new WebHostBuilder()
                 .UseStartup<Startup>()
