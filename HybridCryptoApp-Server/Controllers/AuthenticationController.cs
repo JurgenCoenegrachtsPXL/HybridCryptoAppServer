@@ -54,7 +54,7 @@ namespace HybridCryptoApp_Server.Controllers
             if (result.Succeeded)
             {
                 string role = Role.RegularUser;
-                await EnsureRoleExists(role); // we geven de rol mee, we kijken of het bestaat 
+                await EnsureRoleExists(role).ConfigureAwait(false); // we geven de rol mee, we kijken of het bestaat 
                 await userManager.AddToRoleAsync(user, role);
 
                 return Ok();
@@ -77,7 +77,10 @@ namespace HybridCryptoApp_Server.Controllers
             }
 
             var user = await userManager.FindByNameAsync(model.Email);
-            if (user == null) return Unauthorized();
+            if (user == null)
+            {
+                return Unauthorized();
+            }
 
             if (passwordHasher.VerifyHashedPassword(user, user.PasswordHash, model.Password) !=
                 PasswordVerificationResult.Success)
@@ -85,8 +88,8 @@ namespace HybridCryptoApp_Server.Controllers
                 return Unauthorized(); //omdat de wachtwoord niet klopt
             }
 
-            var token = await CreateJwtToken(user);
-            return Ok(new LoginResponseModel()
+            var token = await CreateJwtToken(user).ConfigureAwait(false);
+            return Ok(new LoginResponseModel
             {
                 Token = token,
                 Name = user.Fullname
@@ -118,8 +121,7 @@ namespace HybridCryptoApp_Server.Controllers
             claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())); // voor traceerbaarheid
             claims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
 
-            var userRoles =
-                await userManager.GetRolesAsync(user); // alle rollen van users ophalen, lijst van strings komt eruit
+            var userRoles = await userManager.GetRolesAsync(user); // alle rollen van users ophalen, lijst van strings komt eruit
             foreach (var role in userRoles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
@@ -143,7 +145,9 @@ namespace HybridCryptoApp_Server.Controllers
         private async Task EnsureRoleExists(string roleName)
         {
             if (await roleManager.RoleExistsAsync(roleName))
+            {
                 return; // als role bestaat dan doen we niets anders maken we het aan
+            }
 
             await roleManager.CreateAsync(new Role
             {

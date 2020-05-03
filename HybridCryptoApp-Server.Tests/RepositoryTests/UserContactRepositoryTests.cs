@@ -13,7 +13,7 @@ namespace HybridCryptoApp_Server.Tests.RepositoryTests
         private User user1;
         private User user2;
 
-        private UserContact ValidUserContact => new UserContact()
+        private UserContact ValidUserContact => new UserContact
         {
             OwnerId = user1.Id,
             ContactId = user2.Id
@@ -22,8 +22,8 @@ namespace HybridCryptoApp_Server.Tests.RepositoryTests
         [SetUp]
         public void SetUp()
         {
-            user1 = new User() { Email = "test@testing.co.uk" };
-            user2 = new User() { Email = "test2@testing.com" };
+            user1 = new User { Email = "test@testing.co.uk" };
+            user2 = new User { Email = "test2@testing.com" };
 
             Context.Users.Add(user1);
             Context.Users.Add(user2);

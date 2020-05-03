@@ -40,7 +40,7 @@ namespace HybridCryptoApp_Server.Controllers
                 return BadRequest(ModelState);
             }
 
-            User user = await GetUserAsync();
+            User user = await GetUserAsync().ConfigureAwait(false);
 
             if (await userManager.FindByIdAsync(userContactModel.ContactId.ToString()) == null)
             {
@@ -49,7 +49,7 @@ namespace HybridCryptoApp_Server.Controllers
 
             try
             {
-                userContactRepository.Add(new UserContact()
+                userContactRepository.Add(new UserContact
                 {
                     OwnerId = user.Id,
                     ContactId = userContactModel.ContactId
@@ -76,7 +76,7 @@ namespace HybridCryptoApp_Server.Controllers
                 return BadRequest(ModelState);
             }
 
-            User user = await GetUserAsync();
+            User user = await GetUserAsync().ConfigureAwait(false);
 
             // find other user
             User contact = await userManager.FindByEmailAsync(userContactModel.ContactEmail);
@@ -87,7 +87,7 @@ namespace HybridCryptoApp_Server.Controllers
 
             try
             {
-                userContactRepository.Add(new UserContact()
+                userContactRepository.Add(new UserContact
                 {
                     OwnerId = user.Id,
                     ContactId = contact.Id
@@ -114,11 +114,11 @@ namespace HybridCryptoApp_Server.Controllers
                 return BadRequest(ModelState);
             }
 
-            User user = await GetUserAsync();
+            User user = await GetUserAsync().ConfigureAwait(false);
 
             try
             {
-                userContactRepository.Delete(new UserContact()
+                userContactRepository.Delete(new UserContact
                 {
                     OwnerId = user.Id,
                     ContactId = userContactModel.ContactId
@@ -139,14 +139,14 @@ namespace HybridCryptoApp_Server.Controllers
         [HttpGet("all")]
         public async Task<IActionResult> GetAll()
         {
-            List<int> ids = userContactRepository.GetUserContactsOfUser((await GetUserAsync()).Id).Select(u => u.ContactId).ToList();
+            List<int> ids = userContactRepository.GetUserContactsOfUser((await GetUserAsync().ConfigureAwait(false)).Id).Select(u => u.ContactId).ToList();
             List<ContactInformationModel> models = new List<ContactInformationModel>();
             
             foreach (int id in ids)
             {
                 User other = await userManager.FindByIdAsync(id.ToString());
 
-                models.Add(new ContactInformationModel()
+                models.Add(new ContactInformationModel
                 {
                     Id = id,
                     FirstName = other.FirstName,

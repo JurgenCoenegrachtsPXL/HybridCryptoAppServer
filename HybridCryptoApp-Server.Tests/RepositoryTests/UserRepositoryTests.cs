@@ -9,9 +9,7 @@ namespace HybridCryptoApp_Server.Tests.RepositoryTests
     public class UserRepositoryTests : DatabaseTests
     {
         private UserRepository userRepository;
-
-
-        private User ValidUser => new User()
+        private User ValidUser => new User
         {
             Id = 0,
             Email = "Testy@McTestFace.co.uk",

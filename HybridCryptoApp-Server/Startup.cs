@@ -78,7 +78,7 @@ namespace HybridCryptoApp_Server
                 {
                     var tokenSettings = new TokenSettings();
                     Configuration.Bind("Token", tokenSettings); // injection doesn't work yet, force manually
-                    options.TokenValidationParameters = new TokenValidationParameters()
+                    options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidIssuer = tokenSettings.Issuer,
                         ValidAudience = tokenSettings.Audience,

@@ -7,7 +7,7 @@ using NUnit.Framework;
 
 namespace HybridCryptoApp_Server.Tests.RepositoryTests
 {
-    public class DatabaseTests
+    public class DatabaseTests : IDisposable
     {
         private SqliteConnection connection;
         private string migrationError = "";

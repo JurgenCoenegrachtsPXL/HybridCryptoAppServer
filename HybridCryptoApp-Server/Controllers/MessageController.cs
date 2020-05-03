@@ -4,11 +4,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using HybridCryptoApp_Server.Data.Models;
-using HybridCryptoApp_Server.Data.Repositories;
 using HybridCryptoApp_Server.Data.Repositories.Interfaces;
 using HybridCryptoApp_Server.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -55,7 +53,7 @@ namespace HybridCryptoApp_Server.Controllers
                 Iv = newMessage.Iv,
                 ReceiverId = newMessage.ReceiverId,
                 Signature = newMessage.Signature,
-                SenderId = (await GetUserAsync()).Id,
+                SenderId = (await GetUserAsync().ConfigureAwait(false)).Id,
                 SendDateTime = DateTime.Now,
                 IsMeantForReceiver = newMessage.MeantForReceiver
             };
@@ -75,38 +73,38 @@ namespace HybridCryptoApp_Server.Controllers
         [HttpGet("AsReceiver")]
         public async Task<IActionResult> GetMessagesAsReceiver()
         {
-            return Ok(encryptedPacketRepository.GetAllPacketsOfReceiver((await GetUserAsync()).Id).Select(e => new StrippedDownEncryptedPacket(e)));
+            return Ok(encryptedPacketRepository.GetAllPacketsOfReceiver((await GetUserAsync().ConfigureAwait(false)).Id).Select(e => new StrippedDownEncryptedPacket(e)));
         }
 
         [HttpGet("AsSender")]
         public async Task<IActionResult> GetMessagesAsSender()
         {
-            return Ok(encryptedPacketRepository.GetAllPacketsOfSender((await GetUserAsync()).Id).Select(e => new StrippedDownEncryptedPacket(e)));
+            return Ok(encryptedPacketRepository.GetAllPacketsOfSender((await GetUserAsync().ConfigureAwait(false)).Id).Select(e => new StrippedDownEncryptedPacket(e)));
         }
 
         [HttpPost("AsReceiverAfter")]
         public async Task<IActionResult> GetMessagesAsReceiverAfter([FromBody] MessagesAfterModel model)
         {
-            return Ok(encryptedPacketRepository.GetAllPacketsOfReceiver((await GetUserAsync()).Id, model.DateTime).Select(e => new StrippedDownEncryptedPacket(e)));
+            return Ok(encryptedPacketRepository.GetAllPacketsOfReceiver((await GetUserAsync().ConfigureAwait(false)).Id, model.DateTime).Select(e => new StrippedDownEncryptedPacket(e)));
         }
 
         [HttpPost("AsSenderAfter")]
         public async Task<IActionResult> GetMessagesAsSenderAfter([FromBody] MessagesAfterModel model)
         {
-            return Ok(encryptedPacketRepository.GetAllPacketsOfSender((await GetUserAsync()).Id, model.DateTime).Select(e => new StrippedDownEncryptedPacket(e)));
+            return Ok(encryptedPacketRepository.GetAllPacketsOfSender((await GetUserAsync().ConfigureAwait(false)).Id, model.DateTime).Select(e => new StrippedDownEncryptedPacket(e)));
         }
 
         [HttpGet("OfContact/{id}")]
         public async Task<IActionResult> GetMessagesOfContact(int id)
         {
-            User user = await GetUserAsync();
+            User user = await GetUserAsync().ConfigureAwait(false);
             User contact = userRepository.GetById(id);
             if (contact == null)
             {
                 return BadRequest();
             }
 
-            List<EncryptedPacket> packets = await encryptedPacketRepository.GetAllPacketsBetweenUsers(user.Id, contact.Id);
+            List<EncryptedPacket> packets = await encryptedPacketRepository.GetAllPacketsBetweenUsers(user.Id, contact.Id).ConfigureAwait(false);
             return Ok(packets.Select(e => new StrippedDownEncryptedPacket(e)));
         }
 

@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using HybridCryptoApp_Server.Data.Models;
 using HybridCryptoApp_Server.Data.Repositories;
-using HybridCryptoApp_Server.Tests.RepositoryTests;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 
 namespace HybridCryptoApp_Server.Tests.RepositoryTests {
 
@@ -18,8 +16,8 @@ namespace HybridCryptoApp_Server.Tests.RepositoryTests {
         [SetUp]
         public void SetUp()
         {
-            user1 = new User() { Email = "test@testing.co.uk" };
-            user2 = new User() { Email = "test2@testing.com" };
+            user1 = new User { Email = "test@testing.co.uk" };
+            user2 = new User { Email = "test2@testing.com" };
 
             Context.Users.Add(user1);
             Context.Users.Add(user2);
@@ -28,7 +26,7 @@ namespace HybridCryptoApp_Server.Tests.RepositoryTests {
             encryptedPacketRepository = new EncryptedPacketRepository(Context);
         }
 
-        private EncryptedPacket ValidEncryptedPacket => new EncryptedPacket()
+        private EncryptedPacket ValidEncryptedPacket => new EncryptedPacket
         {
             SenderId = user1.Id,
             ReceiverId = user2.Id,
@@ -199,7 +197,7 @@ namespace HybridCryptoApp_Server.Tests.RepositoryTests {
         /// <returns></returns>
         private EncryptedPacket CreateRandomEncryptedPacketWithData(int senderId, int receiverId, DateTime? sendTime = null)
         {
-            return new EncryptedPacket()
+            return new EncryptedPacket
             {
                 SendDateTime = sendTime ?? DateTime.Now,
                 SenderId = senderId,
@@ -214,10 +212,10 @@ namespace HybridCryptoApp_Server.Tests.RepositoryTests {
             };
         }
 
-        private byte[] RandomBytes(int length)
+        private static byte[] RandomBytes(int length)
         {
             byte[] output = new byte[length];
-            Random.NextBytes(output);
+            new Random().NextBytes(output);
             return output;
         }
     }

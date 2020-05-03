@@ -31,7 +31,7 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
             return output;
         }
 
-        private NewEncryptedPacketModel ValidEncryptedPacket => new NewEncryptedPacketModel()
+        private NewEncryptedPacketModel ValidEncryptedPacket => new NewEncryptedPacketModel
         {
             DataType = DataType.File,
             
@@ -49,7 +49,8 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
         public async Task SetUp()
         {
             UserManager<User> userManager = Server.Host.Services.GetService<UserManager<User>>();
-            user = new User(){
+            user = new User
+            {
                 FirstName="Hallo",
                 LastName="Test",
                 UserName = "user@pxl.be",

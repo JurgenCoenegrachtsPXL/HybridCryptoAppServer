@@ -1,6 +1,5 @@
 ﻿using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Text;
@@ -12,7 +11,6 @@ using HybridCryptoApp_Server.Data;
 using HybridCryptoApp_Server.Data.Models;
 using Newtonsoft.Json;
 using HybridCryptoApp_Server.Models;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -69,7 +67,7 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
             Client?.Dispose();
         }
 
-        public StringContent Stringify(object obj)
+        public static StringContent Stringify(object obj)
         {
             return new StringContent(JsonConvert.SerializeObject(obj), Encoding.UTF8, "application/json");
         }
@@ -80,12 +78,12 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
             Random.NextBytes(buffer);
             string randomMailPart = Encoding.UTF8.GetString(buffer);
 
-            RegistrationModel registration = new RegistrationModel()
+            RegistrationModel registration = new RegistrationModel
             {
                 Email = $"mailPerson{randomMailPart}@mails.com",
                 Password = "V3ryS3cur3P455w0rd!!",
             };
-            LoginModel login = new LoginModel()
+            LoginModel login = new LoginModel
             {
                 Email = registration.Email,
                 Password = registration.Password
@@ -103,7 +101,7 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
 
         public async Task LoginAsExistingUser(string email, string password)
         {
-            LoginModel login = new LoginModel()
+            LoginModel login = new LoginModel
             {
                 Email = email,
                 Password = password
@@ -121,7 +119,9 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
             RoleManager<Role> roleManager = Server.Host.Services.GetService<RoleManager<Role>>();
 
             if (await roleManager.RoleExistsAsync(roleName))
+            {
                 return; // als role bestaat dan doen we niets anders maken we het aan
+            }
 
             await roleManager.CreateAsync(new Role
             {

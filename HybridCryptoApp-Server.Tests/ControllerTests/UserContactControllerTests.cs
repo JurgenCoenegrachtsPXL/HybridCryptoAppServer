@@ -22,7 +22,7 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
 
         private User user;
 
-        private UserContactModel ValidUserContactModel => new UserContactModel()
+        private UserContactModel ValidUserContactModel => new UserContactModel
         {
             ContactId = user.Id,
             ContactEmail = user.Email
@@ -32,22 +32,21 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
         public async Task SetUp()
         {
             UserManager<User> userManager = Server.Host.Services.GetService<UserManager<User>>();
-            user = new User()
+            user = new User
             {
                 FirstName = "Hallo",
                 LastName = "Test",
                 UserName = "user@pxl.be",
                 Email = "user@pxl.be"
             };
-            var result = await userManager.CreateAsync(user, "ThisIsPassword123");
+            await userManager.CreateAsync(user, "ThisIsPassword123");
             string role = Role.RegularUser;
             await EnsureRoleExists(role); // we geven de rol mee, we kijken of het bestaat 
-            result = await userManager.AddToRoleAsync(user, role);
+            await userManager.AddToRoleAsync(user, role);
 
             user = await userManager.FindByEmailAsync(user.Email);
 
             //User is altijd ingelogd
-            //await LoginAsNewUser();
             await LoginAsExistingUser("user@pxl.be", "ThisIsPassword123");
         }
 
@@ -57,7 +56,7 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
             UserContactModel model = ValidUserContactModel;
             int beforeCount = Context.UserContacts.Count();
 
-            HttpResponseMessage result = await Client.PostAsync(AddByIdPath, Stringify(model));
+            await Client.PostAsync(AddByIdPath, Stringify(model));
             int afterCount = Context.UserContacts.Count();
             Assert.That(afterCount, Is.EqualTo(beforeCount + 1));
         }
@@ -86,7 +85,7 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
         [Test]
         public async Task AddById_Should_Return_Bad_Request_If_UserContact_Already_Exists()
         {
-            Context.UserContacts.Add(new UserContact()
+            Context.UserContacts.Add(new UserContact
             {
                 ContactId = user.Id,
                 OwnerId = user.Id,
@@ -106,7 +105,7 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
             UserContactModel model = ValidUserContactModel;
             int beforeCount = Context.UserContacts.Count();
 
-            HttpResponseMessage result = await Client.PostAsync(AddByEmailPath, Stringify(model));
+            await Client.PostAsync(AddByEmailPath, Stringify(model));
             int afterCount = Context.UserContacts.Count();
             Assert.That(afterCount, Is.EqualTo(beforeCount + 1));
         }
@@ -135,7 +134,7 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
         [Test]
         public async Task AddByEmail_Should_Return_Bad_Request_If_UserContact_Already_Exists()
         {
-            Context.UserContacts.Add(new UserContact()
+            Context.UserContacts.Add(new UserContact
             {
                 ContactId = user.Id,
                 OwnerId = user.Id,
@@ -153,7 +152,7 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
         [Test]
         public async Task Remove_Should_Remove_Existing_UserContact_From_Context()
         {
-            Context.UserContacts.Add(new UserContact()
+            Context.UserContacts.Add(new UserContact
             {
                 ContactId = user.Id,
                 OwnerId = user.Id,
@@ -163,7 +162,7 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
             UserContactModel model = ValidUserContactModel;
             int beforeCount = Context.UserContacts.Count();
 
-            HttpResponseMessage result = await Client.PostAsync(RemovePath, Stringify(model));
+            await Client.PostAsync(RemovePath, Stringify(model));
             int afterCount = Context.UserContacts.Count();
             Assert.That(afterCount, Is.EqualTo(beforeCount - 1));
         }
@@ -171,7 +170,7 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
         [Test]
         public async Task Remove_Should_Return_Ok_If_Contact_Id_Is_An_Existing_User()
         {
-            UserContact userContact = new UserContact()
+            UserContact userContact = new UserContact
             {
                 ContactId = user.Id,
                 OwnerId = user.Id,
@@ -182,8 +181,7 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
 
             UserContactModel model = ValidUserContactModel;
             HttpResponseMessage result = await Client.PostAsync(RemovePath, Stringify(model));
-            string content = await result.Content.ReadAsStringAsync();
-
+            await result.Content.ReadAsStringAsync();
 
             Assert.That(result.StatusCode, Is.EqualTo(HttpStatusCode.OK));
         }
@@ -191,7 +189,7 @@ namespace HybridCryptoApp_Server.Tests.ControllerTests
         [Test]
         public async Task Remove_Should_Return_Bad_Request_If_ContactId_Is_Not_An_Existing_User()
         {
-            Context.UserContacts.Add(new UserContact()
+            Context.UserContacts.Add(new UserContact
             {
                 ContactId = user.Id,
                 OwnerId = user.Id,

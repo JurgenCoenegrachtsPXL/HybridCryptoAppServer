@@ -15,7 +15,6 @@ namespace HybridCryptoApp_Server.Data.Repositories
             this.context = context;
         }
 
-
         /// <inheritdoc />
         public List<UserContact> GetUserContactsOfUser(int ownerId)
         {
@@ -47,16 +46,6 @@ namespace HybridCryptoApp_Server.Data.Repositories
         /// <inheritdoc />
         public void Update(UserContact existingItem)
         {
-            //// check if id exists
-            //if (context.UserContacts.Find(existingItem.OwnerId, existingItem.ContactId) == null)
-            //{
-            //    context.UserContacts.Update(existingItem);
-            //    context.SaveChanges();
-            //}
-            //else
-            //{
-            //    throw new ArgumentException($"No UserContact found with ownerId: {existingItem.OwnerId} and contactId: {existingItem.ContactId} !");
-            //}
             throw new ArgumentException("Update is not possible for UserContacts.");
         }
 
@@ -69,7 +58,6 @@ namespace HybridCryptoApp_Server.Data.Repositories
             {
                 foundContact = context.Entry(foundContact).Entity;
 
-                //context.UserContacts.Remove(existingItem);
                 context.UserContacts.Remove(foundContact);
                 context.SaveChanges();
             }
