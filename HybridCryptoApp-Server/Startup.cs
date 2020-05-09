@@ -1,30 +1,29 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using HybridCryptoApp_Server.Data;
 using HybridCryptoApp_Server.Data.Models;
 using HybridCryptoApp_Server.Data.Repositories;
 using HybridCryptoApp_Server.Data.Repositories.Interfaces;
 using HybridCryptoApp_Server.Models;
+using HybridCryptoApp_Server.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
 namespace HybridCryptoApp_Server
 {
     public class Startup
     {
+        private const int SCryptBlockSize = 8;
+        private const int SCryptIterationCount = 2048;
+        private const int SCryptThreadCount = 1;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -85,6 +84,8 @@ namespace HybridCryptoApp_Server
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSettings.Key))
                     };
                 });
+
+            services.AddSingleton<IPasswordHasher<User>, SCryptPasswordHasher<User>>(s => new SCryptPasswordHasher<User>(SCryptBlockSize, SCryptIterationCount, SCryptThreadCount));
 
             // Repositories
             services.AddScoped<IEncryptedPacketRepository, EncryptedPacketRepository>();

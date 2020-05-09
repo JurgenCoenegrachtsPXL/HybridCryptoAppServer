@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using HybridCryptoApp_Server.Data.Models;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace HybridCryptoApp_Server.Models
 {
