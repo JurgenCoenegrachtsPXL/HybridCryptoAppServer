@@ -32,11 +32,6 @@ namespace HybridCryptoApp_Server.Controllers
         [HttpPost("NewMessage")]
         public async Task<IActionResult> SendNewMessage([FromBody] NewEncryptedPacketModel newMessage)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             if (userRepository.GetById(newMessage.ReceiverId) == null)
             {
                 ModelState.AddModelError("error", "Receiver does not exist");

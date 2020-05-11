@@ -35,11 +35,6 @@ namespace HybridCryptoApp_Server.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegistrationModel model) // zoeken in body niet header
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var user = new User
             {
                 UserName = model.Email,
@@ -71,11 +66,6 @@ namespace HybridCryptoApp_Server.Controllers
         [HttpPost("token")]
         public async Task<IActionResult> CreateToken([FromBody] LoginModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var user = await userManager.FindByNameAsync(model.Email);
             if (user == null)
             {
@@ -118,16 +108,16 @@ namespace HybridCryptoApp_Server.Controllers
             var claims = await userManager.GetClaimsAsync(user);
             claims.Add(new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()));
             claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.UserName));
-            claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())); // voor traceerbaarheid
+            claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
             claims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
 
-            var userRoles = await userManager.GetRolesAsync(user); // alle rollen van users ophalen, lijst van strings komt eruit
+            var userRoles = await userManager.GetRolesAsync(user);
             foreach (var role in userRoles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
 
-            var keyBytes = Encoding.UTF8.GetBytes(tokenSettings.Value.Key); //we willen key in byteArray
+            var keyBytes = Encoding.UTF8.GetBytes(tokenSettings.Value.Key);
             var symmetricSecurityKey = new SymmetricSecurityKey(keyBytes);
             var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
 
@@ -139,7 +129,6 @@ namespace HybridCryptoApp_Server.Controllers
                 signingCredentials: signingCredentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
-            // token binnenpakken signing encryption toepassen & string teruggeven
         }
 
         private async Task EnsureRoleExists(string roleName)

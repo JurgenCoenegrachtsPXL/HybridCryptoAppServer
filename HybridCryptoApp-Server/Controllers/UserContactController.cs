@@ -35,11 +35,6 @@ namespace HybridCryptoApp_Server.Controllers
         [HttpPost("AddById")]
         public async Task<IActionResult> AddUserContactById([FromBody] UserContactModel userContactModel)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             User user = await GetUserAsync().ConfigureAwait(false);
 
             if (await userManager.FindByIdAsync(userContactModel.ContactId.ToString()) == null)
@@ -71,11 +66,6 @@ namespace HybridCryptoApp_Server.Controllers
         [HttpPost("AddByEmail")]
         public async Task<IActionResult> AddUserContactByEmail([FromBody] UserContactModel userContactModel)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             User user = await GetUserAsync().ConfigureAwait(false);
 
             // find other user
@@ -109,11 +99,6 @@ namespace HybridCryptoApp_Server.Controllers
         [HttpPost("Remove")]
         public async Task<IActionResult> RemoveUserContact([FromBody] UserContactModel userContactModel)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             User user = await GetUserAsync().ConfigureAwait(false);
 
             try
