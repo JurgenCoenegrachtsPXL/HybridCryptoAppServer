@@ -1,0 +1,13 @@
+ã
+ÅC:\Users\Jurgen\source\repos\HybridCryptoApp-Server\HybridCryptoApp-Server.Tests\ControllerTests\AuthenticationControllerTests.csutf-8É
+zC:\Users\Jurgen\source\repos\HybridCryptoApp-Server\HybridCryptoApp-Server.Tests\ControllerTests\MessageControllerTests.csutf-8x
+oC:\Users\Jurgen\source\repos\HybridCryptoApp-Server\HybridCryptoApp-Server.Tests\ControllerTests\ServerTests.csutf-8á
+~C:\Users\Jurgen\source\repos\HybridCryptoApp-Server\HybridCryptoApp-Server.Tests\ControllerTests\UserContactControllerTests.csutf-8z
+qC:\Users\Jurgen\source\repos\HybridCryptoApp-Server\HybridCryptoApp-Server.Tests\RepositoryTests\DatabaseTests.csutf-8å
+ÇC:\Users\Jurgen\source\repos\HybridCryptoApp-Server\HybridCryptoApp-Server.Tests\RepositoryTests\EncryptedPacketRepositoryTests.csutf-8á
+~C:\Users\Jurgen\source\repos\HybridCryptoApp-Server\HybridCryptoApp-Server.Tests\RepositoryTests\UserContactRepositoryTests.csutf-8Ä
+wC:\Users\Jurgen\source\repos\HybridCryptoApp-Server\HybridCryptoApp-Server.Tests\RepositoryTests\UserRepositoryTests.csutf-8É
+zC:\Users\Jurgen\source\repos\HybridCryptoApp-Server\HybridCryptoApp-Server.Tests\ServiceTests\SCryptPasswordHasherTests.csutf-8~
+sC:\Users\Jurgen\.nuget\packages\microsoft.net.test.sdk\16.4.0\build\netcoreapp2.1\Microsoft.NET.Test.Sdk.Program.csutf-8\
+QC:\Users\Jurgen\AppData\Local\Temp\.NETCoreApp,Version=v3.1.AssemblyAttributes.csutf-8°
+ïC:\Users\Jurgen\source\repos\HybridCryptoApp-Server\HybridCryptoApp-Server.Tests\obj\Debug\netcoreapp3.1\HybridCryptoApp-Server.Tests.AssemblyInfo.csutf-8

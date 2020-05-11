@@ -32,6 +32,11 @@ namespace HybridCryptoApp_Server.Controllers
             this.userManager = userManager;
         }
 
+        /// <summary>
+        /// Try to register new user
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegistrationModel model) // zoeken in body niet header
         {
@@ -63,6 +68,11 @@ namespace HybridCryptoApp_Server.Controllers
             return BadRequest(ModelState);
         }
 
+        /// <summary>
+        /// Create new token for user
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost("token")]
         public async Task<IActionResult> CreateToken([FromBody] LoginModel model)
         {
@@ -75,7 +85,7 @@ namespace HybridCryptoApp_Server.Controllers
             if (passwordHasher.VerifyHashedPassword(user, user.PasswordHash, model.Password) !=
                 PasswordVerificationResult.Success)
             {
-                return Unauthorized(); //omdat de wachtwoord niet klopt
+                return Unauthorized();
             }
 
             var token = await CreateJwtToken(user).ConfigureAwait(false);
@@ -103,24 +113,33 @@ namespace HybridCryptoApp_Server.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Create new token for specified user
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>String representation of token</returns>
         private async Task<string> CreateJwtToken(User user)
         {
+            // add claims to identity user
             var claims = await userManager.GetClaimsAsync(user);
             claims.Add(new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()));
             claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.UserName));
             claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
             claims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
 
+            // add their role(s)
             var userRoles = await userManager.GetRolesAsync(user);
             foreach (var role in userRoles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
 
+            // create signature
             var keyBytes = Encoding.UTF8.GetBytes(tokenSettings.Value.Key);
             var symmetricSecurityKey = new SymmetricSecurityKey(keyBytes);
             var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
 
+            // combine everything
             var token = new JwtSecurityToken(
                 tokenSettings.Value.Issuer,
                 tokenSettings.Value.Audience,

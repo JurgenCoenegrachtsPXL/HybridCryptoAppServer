@@ -75,15 +75,15 @@ namespace HybridCryptoApp_Server.Data.Repositories
         }
 
         /// <inheritdoc />
-        public List<EncryptedPacket> GetAllPacketsOfSender(int senderId)
-        {
-            return context.EncryptedPackets.Where(e => !e.IsMeantForReceiver && e.SenderId == senderId).ToList();
-        }
-
-        /// <inheritdoc />
         public List<EncryptedPacket> GetAllPacketsOfReceiver(int receiverId, DateTime after)
         {
             return context.EncryptedPackets.Where(e => e.IsMeantForReceiver && e.ReceiverId == receiverId && e.SendDateTime >= after).ToList();
+        }
+
+        /// <inheritdoc />
+        public List<EncryptedPacket> GetAllPacketsOfSender(int senderId)
+        {
+            return context.EncryptedPackets.Where(e => !e.IsMeantForReceiver && e.SenderId == senderId).ToList();
         }
 
         /// <inheritdoc />
